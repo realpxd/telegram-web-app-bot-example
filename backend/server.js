@@ -51,3 +51,33 @@ app.post('/sendMessage', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+app.post('/api', (req, res) => {
+    const { method, ...data } = req.body;
+
+    switch (method) {
+        case 'sendMessage':
+            // Handle sendMessage request
+            // For demonstration, we'll just return a success response
+            res.json({ response: { ok: true, description: 'Message sent successfully', data: req.body } });
+            break;
+
+        case 'changeMenuButton':
+            // Handle changeMenuButton request
+            // For demonstration, we'll just return a success response
+            res.json({ response: { ok: true, description: 'Menu button changed successfully', data: req.body } });
+            break;
+
+        case 'checkInitData':
+            // Handle checkInitData request
+            // For demonstration, we'll just return a success response
+            res.json({ ok: true, description: 'Init data is correct', data: req.body });
+            break;
+
+        default:
+            res.status(400).json({ error: 'Unknown method' });
+    }
+});
