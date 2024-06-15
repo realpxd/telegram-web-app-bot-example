@@ -7,9 +7,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+const allowedOrigin = 'https://realpxd.github.io';
 
+// Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    origin: allowedOrigin,
+    credentials: true
+}));
+
+app.options('*', cors({
+    origin: allowedOrigin,
+    credentials: true
+}));
 
 async function getUpdates() {
     try {

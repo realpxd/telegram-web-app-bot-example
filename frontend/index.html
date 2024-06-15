@@ -739,7 +739,8 @@
                 })),
                 credentials: 'include',
                 headers    : {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*"
                 }
             }).then(function (response) {
                 return response.json();
