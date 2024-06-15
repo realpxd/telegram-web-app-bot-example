@@ -48,13 +48,6 @@ app.post('/sendMessage', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-
 app.post('/api', (req, res) => {
     const { method, ...data } = req.body;
 
@@ -80,4 +73,8 @@ app.post('/api', (req, res) => {
         default:
             res.status(400).json({ error: 'Unknown method' });
     }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
