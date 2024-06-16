@@ -7,17 +7,29 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
-const allowedOrigin = '*';
+const allowedOrigins = ['https://realpxd.github.io', 'https://api.telegram.org', 'https://core.telegram.org', 'https://web.telegram.org', 'https://t.me', 'https://telegram.org', 'https://telegram.me', 'https://telegram.dog', 'http://127.0.0.1', 'http://localhost'];
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
 app.options('*', cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
