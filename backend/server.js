@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
-const allowedOrigins = ['https://realpxd.github.io', 'https://api.telegram.org', 'https://core.telegram.org', 'https://web.telegram.org', 'https://t.me', 'https://telegram.org', 'https://telegram.me', 'https://telegram.dog', 'http://127.0.0.1', 'http://localhost'];
+const allowedOrigins = ['https://realpxd.github.io', 'https://api.telegram.org', 'https://core.telegram.org', 'https://web.telegram.org', 'https://t.me', 'https://telegram.org', 'https://telegram.me', 'https://telegram.dog', 'http://127.0.0.1:5500', 'http://localhost:5500', 'https://localhost'];
 
 // Middleware
 app.use(bodyParser.json());
@@ -33,23 +33,23 @@ app.options('*', cors({
     credentials: true
 }));
 
-async function getUpdates() {
-    try {
-        const response = await axios.get(`${TELEGRAM_API_URL}/getUpdates`);
-        const updates = response.data.result;
+// async function getUpdates() {
+//     try {
+//         const response = await axios.get(`${TELEGRAM_API_URL}/getUpdates`);
+//         const updates = response.data.result;
 
-        if (updates.length > 0) {
-            const chatId = updates[0].message.chat.id;
-            console.log('Chat ID:', chatId);
-        } else {
-            console.log('No updates available');
-        }
-    } catch (error) {
-        console.error('Error fetching updates:', error);
-    }
-}
+//         if (updates.length > 0) {
+//             const chatId = updates[0].message.chat.id;
+//             console.log('Chat ID:', chatId);
+//         } else {
+//             console.log('No updates available');
+//         }
+//     } catch (error) {
+//         console.error('Error fetching updates:', error);
+//     }
+// }
 
-getUpdates();
+// getUpdates();
 
 app.post("/new-message", function (req, res) {
     const { message } = req.body
@@ -58,8 +58,8 @@ app.post("/new-message", function (req, res) {
         return res.end()
     }
     var msgtosend = "lalalalala"
-    if (message.text.toLowerCase() == "hi") {
-        msgtosend = "Hello"
+    if (message.text.toLowerCase() == "hi" || message.text.toLowerCase() == "hello" || message.text.toLowerCase() == "hey" || message.text.toLowerCase() == "yo") {
+        msgtosend = "hii cutie!!"
     } else if (message.text.toLowerCase() == "bye") {
         msgtosend = "Goodbye"
     } else if (message.text.toLowerCase() == "/start") {
@@ -129,6 +129,7 @@ app.post('/api', (req, res) => {
             const user = JSON.parse(authData.user);
             const chat_id = user.id; // User ID from the parsed auth data
             const message = data.msg_id || 'Default message'; // Message to be sent
+            console.log(authData + ' ' + user + ' ' + chat_id + ' ' + message);
 
             // Call the Telegram Bot API to send the message
             fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
