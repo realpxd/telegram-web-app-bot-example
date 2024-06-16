@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
-const allowedOrigin = 'https://realpxd.github.io';
+const allowedOrigin = '*';
 
 // Middleware
 app.use(bodyParser.json());
@@ -38,6 +38,43 @@ async function getUpdates() {
 }
 
 getUpdates();
+
+app.post("/new-message", function (req, res) {
+    const { message } = req.body
+
+    if (!message) {
+        return res.end()
+    }
+    var msgtosend = "lalalalala"
+    if (message.text.toLowerCase() == "hi") {
+        msgtosend = "Hello"
+    } else if (message.text.toLowerCase() == "bye") {
+        msgtosend = "Goodbye"
+    } else if (message.text.toLowerCase() == "/start") {
+        msgtosend = "Welcome to the bot"
+    } else if (message.text.toLowerCase() == "/help") {
+        msgtosend = "This is a help message"
+    } else {
+        msgtosend += ", I don't understand"
+    }
+
+    axios
+        .post(
+            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+            {
+                chat_id: message.chat.id,
+                text: msgtosend,
+            }
+        )
+        .then((response) => {
+            console.log("Message posted")
+            res.end("ok")
+        })
+        .catch((err) => {
+            console.log("Error :", err)
+            res.end("Error :" + err)
+        })
+})
 
 app.post('/sendMessage', async (req, res) => {
     const { chat_id, message } = req.body;
@@ -90,18 +127,18 @@ app.post('/api', (req, res) => {
                     text: message
                 })
             })
-            .then(response => response.json())
-            .then(result => {
-                if (result.ok) {
-                    res.json({ response: { ok: true, description: 'Message sent successfully', data: req.body } });
-                } else {
-                    res.status(500).json({ error: result.description });
-                }
-            })
-            .catch(error => {
-                console.error('Error sending message:', error);
-                res.status(500).json({ error: 'Error sending message' });
-            });
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok) {
+                        res.json({ response: { ok: true, description: 'Message sent successfully', data: req.body } });
+                    } else {
+                        res.status(500).json({ error: result.description });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    res.status(500).json({ error: 'Error sending message' });
+                });
 
             break;
 
